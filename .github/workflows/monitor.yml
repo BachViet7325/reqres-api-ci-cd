@@ -1,0 +1,26 @@
+name: Production Monitor
+
+on:
+  schedule:
+    - cron: '0 * * * *'
+  workflow_dispatch:
+
+jobs:
+  monitor-api:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout mã nguồn
+        uses: actions/checkout@v4
+
+      - name: Cài đặt Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Cài đặt Newman
+        run: npm install -g newman
+
+      - name: Chạy kịch bản Monitor
+        run: |
+          newman run Monitor_Collection.json \
+            --env-var "apiKey=${{ secrets.REQRES_API_KEY }}"
